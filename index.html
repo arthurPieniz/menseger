@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>Menseger</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="website icon" type="png" href="https://cdn.icon-icons.com/icons2/622/PNG/96/whatsapp-logo_icon-icons.com_57054.png">
+  </head>
+  <body>
+    <div class="header">
+      <h1>Menseger</h1>
+    </div>
+
+    <div class="mensages">
+        <h3 id="msgs">aqui</h3>
+    </div>
+
+    <div class="scripter">
+        <input type="text" placeholder="Digite sua mensagem" autocomplete="off" id="input">
+        <button id="btn">Enviar</button>
+    </div>
+
+    <!-- Inclusão da biblioteca Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.21.0/firebase-firestore.js"></script>
+
+    <!-- Seu código JavaScript -->
+    <script>
+      // Inicialização do Firestore
+      var firebaseConfig = {
+        apiKey: "AIzaSyD9kV2i0zusCLffWycph9x6n_3gdbvyNmY",
+        authDomain: "projeto2-b5e3b.firebaseapp.com",
+        projectId: "projeto2-b5e3b",
+        storageBucket: "projeto2-b5e3b.appspot.com",
+        messagingSenderId: "582001842005",
+        appId: "1:582001842005:web:a0f8fb3a4d7bf4058201dc"
+      };
+
+      firebase.initializeApp(firebaseConfig);
+      var db = firebase.firestore();
+
+      let inp = document.getElementById('input')
+      let btn = document.getElementById('btn')
+
+      let msgs = document.getElementById("msgs");
+
+      let colect = db.collection("mensagens")
+
+      let x;
+      let nome=prompt("Digite seu nome")
+      if(nome!=null){
+          x = nome;
+      }
+      
+      // colect.get().then(querySnapshot =>{
+      //     var resultados =""
+      //   querySnapshot.forEach(function(doc) {
+      //     // console.log(doc.id, "=>", doc.data())
+      //     resultados += doc.data().msg + "<br>"
+      //   })
+      //     document.getElementById("msgs").innerHTML = resultados
+      // })
+      // .catch(error =>{
+      //   console.error('deu ruim :(')
+      // })
+
+      colect.onSnapshot(function(querySnapshot){
+        var resultados =""
+        querySnapshot.forEach(function(doc) {
+          // console.log(doc.id, "=>", doc.data())
+          resultados += doc.data().msg + "<br>"
+        })
+          document.getElementById("msgs").innerHTML = resultados
+      })
+      // })
+      
+
+      btn.addEventListener("click",()=>{
+      
+        // Criação de uma coleção
+      db.collection("mensagens").add({
+          msg: x + " : " + inp.value
+      })
+      .then(function(docRef) {
+          // console.log("Document written with ID: ", docRef.id);
+      })
+      .catch(function(error) {
+          // console.error("Error adding document: ", error);
+          alert("Não foi possível enviar a mensagem")
+      });
+
+      inp.value = "";
+    
+    })
+    </script>
+  </body>
+</html>
